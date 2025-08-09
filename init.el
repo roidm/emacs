@@ -313,15 +313,6 @@
   (vertico-count 10)
   (vertico-resize nil)
   (vertico-cycle t))
-  ;; :config
-  ;; (advice-add #'vertico--format-candidate :around
-              ;; (lambda (orig cand prefix suffix index _start)
-                ;; (setq cand (funcall orig cand prefix suffix index _start))
-                ;; (concat
-                 ;; (if (= vertico--index index)
-                     ;; (propertize "» " 'face '(:foreground "#80adf0" :weight bold))
-                   ;; "  ")
-                 ;; cand))))
 
 (use-package orderless
   :ensure t :straight t :defer t :after vertico
@@ -606,7 +597,6 @@
     "<down>" '(evil-window-down :wk "W down")
     "<up>" '(evil-window-up :wk "W up")
     "<right>" '(evil-window-right :wk "W right")
-
 
 	"t"  '(:ignore t :which-key "Theme/UI")
 	"tc" '(consult-theme :which-key "Check themes")
