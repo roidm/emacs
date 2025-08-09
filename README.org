@@ -1,0 +1,42 @@
+#+TITLE: Personal Emacs Configuration
+#+AUTHOR: Roi DM
+#+EMAIL: roidm@protonmail.com
+#+STARTUP: overview
+
+[[URL_DESTINO][https://github.com/roidm/emacs/blob/main/themes/emacs.png?raw=true]]
+
+* Description
+This repository contains my personal Emacs configuration, optimized for software development, writing, and productivity. It includes:
+
+- Package management with straight.el and use-package
+- Modern interface with doom-modeline and doom-themes
+- Multi-language support with treesit-auto and eglot
+- Git integration via magit
+- Productivity enhancements with evil-mode (Vim emulation)
+
+* Installation
+** Requirements
+- Emacs 29.1 or higher
+- Git
+- JetBrainsMono NF font installed (or other Nerd Font)
+
+* License
+MIT License
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
