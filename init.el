@@ -1,3 +1,4 @@
+
 ;;; init.el --- -*- lexical-binding: t; -*-
 (setq user-full-name "Roi DM"
 	  user-mail-address "roidm@protonmail.com")
@@ -67,6 +68,7 @@
   ;(set-display-table-slot standard-display-table 'vertical-border (make-glyph-code ?│))
   :init
   (tool-bar-mode -1)
+  (blink-cursor-mode 0)
   (menu-bar-mode -1)
   (scroll-bar-mode -1)
   (global-hl-line-mode 1)
@@ -77,7 +79,6 @@
   (save-place-mode 1)
   (winner-mode 1)
   (file-name-shadow-mode 1)
-  (set-face-attribute 'default nil :family "JetBrainsMono NF"  :height 125 :weight 'medium)
   (defvar my-font-size-step 10)
   (defun my-increase-font-size ()
     (interactive)
@@ -221,7 +222,9 @@
 (use-package org :ensure nil :defer t)
 
 (use-package org-modern
-  :ensure t :straight t :defer t :hook (org-mode . org-modern-mode)
+  :ensure t :straight t :defer t
+  :hook (org-mode . org-modern-mode)
+
   :config
   (setq org-modern-hide-stars "· "
         org-modern-star '("◉" "○" "◈" "◇" "◆" "▷")
@@ -283,10 +286,6 @@
                           :weight font-weight
                           :height 1.1))))
 
-(use-package org-bullets
-  :ensure t  :straight t  :defer t
-  :after org
-  :hook (org-mode . org-bullets-mode))
 (add-hook 'org-mode-hook 'org-indent-mode)
 
 ;;; Wich-key
@@ -310,7 +309,7 @@
 (use-package vertico
   :ensure t :straight t :hook  (after-init . vertico-mode)
   :custom
-  (vertico-count 10)
+  (vertico-count 15)
   (vertico-resize nil)
   (vertico-cycle t))
 
@@ -504,8 +503,13 @@
     :global-prefix "C-SPC")
 
   (my-leader-key
+	"RET" '(bookmark-jump :wk "Bookmarks")
 	"SPC" '(execute-extended-command :wk "M-x")
+	"/" '(evil-search-forward :wk "Search")
 	"." '(find-file :wk "find")
+	";" '(eval-expression :wk "Eval expresion")
+	"<" '(consult-buffer :wk "Switch buffer")
+	"'" '(evil-switch-to-windows-last-buffer :wk "Last buffer")
 	"TAB TAB" '(comment-line :wk "Comment lines")
 
     ;; AI
@@ -515,30 +519,30 @@
     "ar" '(chatgpt-shell-send-to-buffer :wk "send buffer")
     "at" '(chatgpt-shell-send-region :wk "send region")
 	;; ──────────────────────── HELP ─────────────────────────────
-	"h"  '(:ignore t :which-key "Help")
-	"hh" '(help-command :which-key "Help (menu)")
-	"hs" '(describe-major-mode :which-key "Describe major mode")
-	"hk" '(help-with-timer :which-key "Help timer")
-	"hi" '(display-missing-keybindings :which-key "Babel…")
-	"hr" '(reload-init-file :which-key "Reload configuration")
+	"h"  '(:ignore t :wk "Help")
+	"hh" '(help-command :wk "Help (menu)")
+	"hs" '(describe-major-mode :wk "Describe major mode")
+	"hk" '(help-with-timer :wk "Help timer")
+	"hi" '(display-missing-keybindings :wk "Babel…")
+	"hr" '(reload-init-file :wk "Reload configuration")
 	;; ──────────────────────── BUFFER ────────────────────────────
-	"b"  '(:ignore t :which-key "Buffers")
-	"bb" '(switch-to-buffer :which-key "Switch")
-	"bn" '(evil-next-buffer :which-key "Next")
-	"bp" '(evil-previous-buffer :which-key "Previous")
-	"bk" '(kill-current-buffer :which-key "Kill current buffer")
-	"bK" '(kill-some-buffers :which-key "Kill buffers")
-	"bc" '(comment-line :which-key "Toggle comment")
-	"bl" '(which-key-show :which-key "Which-Key menu")
+	"b"  '(:ignore t :wk "Buffers")
+	"bb" '(switch-to-buffer :wk "Switch")
+	"bn" '(evil-next-buffer :wk "Next")
+	"bp" '(evil-previous-buffer :wk "Previous")
+	"bk" '(kill-current-buffer :wk "Kill current buffer")
+	"bK" '(kill-some-buffers :wk "Kill buffers")
+	"bc" '(comment-line :wk "Toggle comment")
+	"bl" '(consult-buffer :wk "List buffers")
 	;; ──────────────────────── FILE ──────────────────────────────
-	"f"  '(:ignore t :which-key "Files")
-	"ff" '(consult-find          :which-key "Find file")
-	"fg" '(consult-git           :which-key "Git project")
-	"fr" '(consult-recent-file   :which-key "Recents")
-	"fa" '(org-agenda :which-key "Org agenda")
-	"fe" '(find-file-other-window :which-key "Other window")
-	"fm" '(magit-mode :which-key "Magit status")
-	"fp" '(bookmark-jump :which-key "Bookmarks")
+	"f"  '(:ignore t :wk "Files")
+	"ff" '(consult-find          :wk "Find file")
+	"fg" '(consult-git           :wk "Git project")
+	"fr" '(consult-recent-file   :wk "Recents")
+	"fa" '(org-agenda :wk "Org agenda")
+	"fe" '(find-file-other-window :wk "Other window")
+	"fm" '(magit-mode :wk "Magit status")
+	"fp" '(bookmark-jump :wk "Bookmarks")
 	;; ──────────────────────── GIT / MAGIT ─────────────────────
 	"g" '(:ignore t :wk "Magit")
 	"gs" '(magit-status :wk "status")
@@ -554,63 +558,64 @@
 	"gm" '(magit-merge :wk "merge")
 	"gr" '(magit-rebase :wk "rebase")
 	;; ──────────────────────── SEARCH ─────────────────────────────
-	"s"  '(:ignore t :which-key "Search")
-	"ss" '(consult-line          :which-key "Search in buffer")
-	"sg" '(consult-ripgrep       :which-key "Search project")
-	"sh" '(consult-grep           :which-key "Grepped – advanced")
+	"s"  '(:ignore t :wk "Search")
+	"ss" '(consult-line          :wk "Search in buffer")
+	"sg" '(consult-ripgrep       :wk "Search project")
+	"sh" '(consult-grep           :wk "Grepped – advanced")
 	;; ──────────────────────── LSP ───────────────────────────────
-	"l"  '(:ignore t :which-key "Eglot")
-	"ld" '(eglot-find-definition   :which-key "Go to def.")
-	"lr" '(eglot-rename             :which-key "Rename")
-	"li" '(eglot-code-actions       :which-key "Code actions")
-	"lc" '(eglot-format-buffer      :which-key "Format")
-	"ll" '(eglot-diagnostics-mode   :which-key "Toggle diag.")
-	"lt" '(eglot-shutdown          :which-key "Shutdown")
+	"l"  '(:ignore t :wk "Eglot")
+	"ld" '(eglot-find-definition   :wk "Go to def.")
+	"lr" '(eglot-rename             :wk "Rename")
+	"li" '(eglot-code-actions       :wk "Code actions")
+	"lc" '(eglot-format-buffer      :wk "Format")
+	"ll" '(eglot-diagnostics-mode   :wk "Toggle diag.")
+	"lt" '(eglot-shutdown          :wk "Shutdown")
 	;; ──────────────────────── ORG MODE ─────────────────────────
-	"o"  '(:ignore t :which-key "Org")
-	"oa" '(org-agenda :which-key "Agenda")
-	"ot" '(org-tags-view :which-key "Tags view")
-	"od" '(org-deadline :which-key "Set deadline")
-	"ox" '(org-export-dispatch :which-key "Export")
-	"oj" '(org-journal-custom-toggle :which-key "Journal")
-	"or" '(org-refile :which-key "Refile")
-	"oi" '(org-insert-link :which-key "Link")
-	"oh" '(org-habit :which-key "Habit")
-	"og" '(org-gmail-threads :which-key "Gmail threads")
+	"o"  '(:ignore t :wk "Org")
+	"oa" '(org-agenda :wk "Agenda")
+	"ot" '(org-tags-view :wk "Tags view")
+	"od" '(org-deadline :wk "Set deadline")
+	"ox" '(org-export-dispatch :wk "Export")
+	"oj" '(org-journal-custom-toggle :wk "Journal")
+	"or" '(org-refile :wk "Refile")
+	"oi" '(org-insert-link :wk "Link")
+	"oh" '(org-habit :wk "Habit")
+	"og" '(org-gmail-threads :wk "Gmail threads")
 	;; ──────────────────────── EDIT / CODING ─────────────────────
-	"e"  '(:ignore t :which-key "Edit/Code")
-	"ec" '(compile :which-key "Compile T")
-	"er" '(eval-region :which-key "Eval region")
-	"eb" '(eval-buffer :which-key "Eval buffer")
-	"et" '(comment-or-uncomment-region :which-key "Toggle comment")
-	"ex" '(remove-text-properties :which-key "Clean buffer")
-	"el" '(enable-lisp-mode :which-key "Lisp")
-	"eL" '(escape-newline :which-key "No wrap")
+	"e"  '(:ignore t :wk "Edit/Code")
+	"ec" '(compile :wk "Compile T")
+	"er" '(eval-region :wk "Eval region")
+	"eb" '(eval-buffer :wk "Eval buffer")
+	"et" '(comment-or-uncomment-region :wk "Toggle comment")
+	"ex" '(remove-text-properties :wk "Clean buffer")
+	"el" '(enable-lisp-mode :wk "Lisp")
+	"eL" '(escape-newline :wk "No wrap")
 	;; ──────────────────────── MISC ──────────────────────────────
-	"w"  '(:ignore t :which-key "Workspace/Window")
-	"wd" '(workspace-previous :which-key "Previous")
-	"wf" '(workspace-switch-to :which-key "Switch")
-	"wl" '(buffer-menu :which-key "Buffer list")
-	"wr" '(rename-buffer :which-key "Rename")
-	"wq" '(save-buffers-kill-terminal :which-key "Quit")
+	"w"  '(:ignore t :wk "Workspace/Window")
+	"wd" '(workspace-previous :wk "Previous")
+	"wf" '(workspace-switch-to :wk "Switch")
+	"wl" '(buffer-menu :wk "Buffer list")
+	"wr" '(rename-buffer :wk "Rename")
+	"wq" '(save-buffers-kill-terminal :wk "Quit")
     "<left>" '(evil-window-left :wk "W left")
     "<down>" '(evil-window-down :wk "W down")
     "<up>" '(evil-window-up :wk "W up")
     "<right>" '(evil-window-right :wk "W right")
 
-	"t"  '(:ignore t :which-key "Theme/UI")
-	"tc" '(consult-theme :which-key "Check themes")
-	"ta" '(doom-solarized-dark :which-key "Solarized dark")
-	"tb" '(doom-one-bright :which-key "One bright")
-	"tm" '(doom-moonlight-dark :which-key "Moonlight dark")
-	"th" '(doom-themes-toggle :which-key "Toggle theme")
 
-	"i"  '(:ignore t :which-key "Info/Settings")
-	"if" '(customize-group :which-key "Custom")
-	"ii" '(describe-key :which-key "Describe key")
-	"ic" '(describe-function :which-key "Describe function")
-	"is" '(describe-variable :which-key "Describe variable")
-	"ig" '(god-mode-toggle :which-key "God mode")
+	"t"  '(:ignore t :wk "Theme/UI")
+	"tc" '(consult-theme :wk "Check themes")
+	"ta" '(doom-solarized-dark :wk "Solarized dark")
+	"tb" '(doom-one-bright :wk "One bright")
+	"tm" '(doom-moonlight-dark :wk "Moonlight dark")
+	"th" '(doom-themes-toggle :wk "Toggle theme")
+
+	"i"  '(:ignore t :wk "Info/Settings")
+	"if" '(customize-group :wk "Custom")
+	"ii" '(describe-key :wk "Describe key")
+	"ic" '(describe-function :wk "Describe function")
+	"is" '(describe-variable :wk "Describe variable")
+	"ig" '(god-mode-toggle :wk "God mode")
 
 	"q"  '(:ignore t :wk "quit")
 	"qq" '(save-buffers-kill-terminal :wk "quit")
