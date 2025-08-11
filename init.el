@@ -1,10 +1,11 @@
-
 ;;; init.el --- -*- lexical-binding: t; -*-
 (setq user-full-name "Roi DM"
 	  user-mail-address "roidm@protonmail.com")
 
 (setq copyright-names-regexp
       (format "%s <%s>" user-full-name user-mail-address))
+
+(add-to-list 'load-path (expand-file-name "lisp/" user-emacs-directory))
 
 ;; Bootstraps `straight.el'
 (setq straight-check-for-modifications nil)
@@ -39,19 +40,15 @@
   (delete-selection-mode 1)
   (global-auto-revert-non-file-buffers t)
   (history-length 25)
-  (inhibit-startup-message t)
-  (initial-scratch-message "")
   (make-backup-files nil)
   (pixel-scroll-precision-mode t)
   (pixel-scroll-precision-use-momentum nil)
-  (ring-bell-function 'ignore)
   (split-width-threshold 300)
   (switch-to-buffer-obey-display-actions t)
   (tab-always-indent 'complete)
   (tab-width 4)
   (treesit-font-lock-level 4)
   (truncate-lines t)
-  (use-dialog-box nil)
   (electric-pair-mode 1)
   (use-short-answers t)
   (warning-minimum-level :emergency)
@@ -65,15 +62,11 @@
     "Function for `switch-to-prev-buffer-skip'."
     (string-match "\\*[^*]+\\*" (buffer-name buffer)))
   (setq switch-to-prev-buffer-skip 'skip-these-buffers)
-  ;(set-display-table-slot standard-display-table 'vertical-border (make-glyph-code ?│))
   :init
-  (tool-bar-mode -1)
-  (blink-cursor-mode 0)
-  (menu-bar-mode -1)
-  (scroll-bar-mode -1)
   (global-hl-line-mode 1)
   (global-auto-revert-mode 1)
   (indent-tabs-mode -1)
+  (blink-cursor-mode 0)
   (recentf-mode 1)
   (savehist-mode 1)
   (save-place-mode 1)
@@ -111,7 +104,7 @@
   :ensure nil
   :commands (dired dired-jump)
   :custom
-  (dired-listing-switches "-alh" "-v" "--group-directories-first")
+  (dired-listing-switches "-alh --group-directories-first")
   (dired-auto-revert-buffer t)
   (dired-dwim-target t)
   (dired-recursive-deletes 'always)
@@ -122,10 +115,11 @@
      (".*" "open" "xdg-open")))
   (dired-kill-when-opening-new-dired-buffer t)
   :config
+  ;; Define evil-mode keys for a vim-like experience.
   (evil-define-key 'normal dired-mode-map
     ;; Navigation
     (kbd "h") 'dired-up-directory
-    (kbd "l") 'dired-find-file-other-window
+    (kbd "l") 'dired-find-file-other-window ; Open in other window is often more useful
     (kbd "j") 'dired-next-line
     (kbd "k") 'dired-previous-line
     (kbd "G") 'dired-goto-file
@@ -145,7 +139,7 @@
     (kbd "R") 'dired-do-rename
     (kbd "D") 'dired-do-delete
     (kbd "C") 'dired-do-copy
-    (kbd "X") 'dired-open-file
+    (kbd "X") 'dired-open-file ; Use dired-open to open externally
     (kbd "M") 'dired-do-chmod
     (kbd "O") 'dired-do-chown))
 
@@ -153,32 +147,11 @@
 (use-package dired-x
   :ensure nil
   :after dired
-  :hook (dired-mode . dired-omit-mode)
+  :custom (dired-x-hands-off-my-keys nil)
   :config
-  (setq dired-omit-verbose nil
-		dired-omit-files
-		(concat dired-omit-files
-				"\\|^\\.DS_Store\\'"
-				"\\|^flycheck_.*"
-				"\\|^\\.project\\(?:ile\\)?\\'"
-				"\\|^\\.\\(?:svn\\|git\\)\\'"
-				"\\|^\\.ccls-cache\\'"
-				"\\|\\(?:\\.js\\)?\\.meta\\'"
-				"\\|\\.\\(?:elc\\|o\\|pyo\\|swp\\|class\\)\\'"))
-  (setq dired-clean-confirm-killing-deleted-buffers nil)
-  (when-let (cmd (cond ((featurep :system 'macos) "open")
-					   ((featurep :system 'linux) "xdg-open")
-					   ((featurep :system 'windows) "start")))
-	(setq dired-guess-shell-alist-user
-		  `(("\\.\\(?:docx\\|pdf\\|djvu\\|eps\\)\\'" ,cmd)
-			("\\.\\(?:jpe?g\\|png\\|gif\\|xpm\\)\\'" ,cmd)
-			("\\.\\(?:xcf\\)\\'" ,cmd)
-			("\\.csv\\'" ,cmd)
-			("\\.tex\\'" ,cmd)
-			("\\.\\(?:mp4\\|mkv\\|avi\\|flv\\|rm\\|rmvb\\|ogv\\)\\(?:\\.part\\)?\\'" ,cmd)
-			("\\.\\(?:mp3\\|flac\\)\\'" ,cmd)
-			("\\.html?\\'" ,cmd)
-			("\\.md\\'" ,cmd)))))
+  ;; Define dired-omit-files to prevent void-variable errors
+  (setq dired-omit-files "^\\.[^.]\\|^#\\|^\\.$\\|^\\.\\.$\\|\\.pyc$\\|\\.o$")
+  (setq dired-omit-verbose nil))
 
 (use-package diredfl
   :ensure t :straight t
@@ -346,13 +319,11 @@
 
 (use-package yasnippet
   :ensure t :straight t :defer t
-  :bind ("<f8> . yas-insert-snippet")
+  :bind ("<f8>" . yas-insert-snippet)
   :config
-  (make-directory (expand-file-name "var/snippets" user-emacs-directory) t)
-  (setq yas-snippet-dirs
-        (list (expand-file-name "var/snippets" user-emacs-directory)))
-  (yas-global-mode 1)
-  (yas-reload-all))
+  (add-to-list 'yas-snippet-dirs
+               (expand-file-name "var/snippets/" user-emacs-directory))
+  (yas-global-mode 1))
 
 (use-package consult
   :ensure t :straight t :defer t
@@ -601,6 +572,7 @@
 	"oj" '(org-journal-custom-toggle :wk "Journal")
 	"or" '(org-refile :wk "Refile")
 	"oi" '(org-insert-link :wk "Link")
+	"ol" '(org-toggle-link-display :wk "toggle literal links")
 	"oh" '(org-habit :wk "Habit")
 	"og" '(org-gmail-threads :wk "Gmail threads")
 	;; ──────────────────────── EDIT / CODING ─────────────────────
@@ -718,7 +690,11 @@
     (set-face-attribute 'default nil
                         :family "JetBrainsMono NF"
                         :height 126               ; 12.5 pt (≈ 12 px con DPI = 96)
-                        :weight 'SemiBold)))
+                        :weight 'SemiBold)
+	(set-face-attribute 'variable-pitch nil
+					:family "UbuntuSans Nerd Font Propo"
+					:height 130
+					:weight 'medium)))
 
 (my-apply-font-to-frame (selected-frame))
 (add-hook 'after-make-frame-functions #'my-apply-font-to-frame)
@@ -729,10 +705,56 @@
   (with-selected-frame frame
     (set-face-attribute 'default nil
                         :family "JetBrainsMono NF"
-                        :height my--default-font-size
-                        :weight 'SemiBold)))
+                        :height 126               ; 12.5 pt (≈ 12 px con DPI = 96)
+                        :weight 'SemiBold)
+	(set-face-attribute 'variable-pitch nil
+					:family "UbuntuSans Nerd Font Propo"
+					:height 130
+					:weight 'medium)))
 (when (display-graphic-p)
   (set-face-attribute 'default nil :height my--default-font-size))
+
+(use-package prot-modeline
+  :ensure nil
+  :config
+  (setq mode-line-compact nil) ; Emacs 28
+  (setq mode-line-right-align-edge 'right-margin) ; Emacs 30
+  (setq-default mode-line-format
+                '("%e"
+                  prot-modeline-kbd-macro
+                  prot-modeline-narrow
+                  prot-modeline-buffer-status
+                  prot-modeline-window-dedicated-status
+                  prot-modeline-input-method
+                  "  "
+                  prot-modeline-buffer-identification
+                  "  "
+                  prot-modeline-major-mode
+                  prot-modeline-process
+                  "  "
+                  prot-modeline-vc-branch
+                  "  "
+                  prot-modeline-eglot
+                  "  "
+                  prot-modeline-flymake
+                  "  "
+                  mode-line-format-right-align ; Emacs 30
+                  prot-modeline-notmuch-indicator
+                  "  "
+                  prot-modeline-misc-info))
+
+  (with-eval-after-load 'spacious-padding
+    (defun prot/modeline-spacious-indicators ()
+      "Set box attribute to `'prot-modeline-indicator-button' if spacious-padding is enabled."
+      (if (bound-and-true-p spacious-padding-mode)
+          (set-face-attribute 'prot-modeline-indicator-button nil :box t)
+        (set-face-attribute 'prot-modeline-indicator-button nil :box 'unspecified)))
+
+    ;; Run it at startup and then afterwards whenever
+    ;; `spacious-padding-mode' is toggled on/off.
+    (prot/modeline-spacious-indicators)
+
+    (add-hook 'spacious-padding-mode-hook #'prot/modeline-spacious-indicators)))
 
 (use-package doom-modeline
   :ensure t :straight t :defer t
@@ -741,7 +763,7 @@
   (doom-modeline-buffer-name t)
   (doom-modeline-vcs-max-length 25)
   :config
-  (setq display-time-format "%a%e %b, %H:%M")
+  (setq display-time-format "%a %e %b, %H:%M")
   (display-time-mode 1)
   (setq doom-modeline-icon t)
   :hook

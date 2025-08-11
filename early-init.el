@@ -1,44 +1,58 @@
 ;; -*- lexical-binding: t; -*-
 
-;;; Smart GC settings
+(defconst my/gc-threshold-normal (* 16 1024 1024)  ; 16 MiB
+  "GC threshold used during normal operation.")
 
-;; Default values
-(defvar gc-threshold-normal (* 16 1024 1024)) ;; 16MB
-(defvar gc-threshold-high   most-positive-fixnum)
-(defvar gc-percentage-original gc-cons-percentage)
+(defconst my/gc-threshold-high  most-positive-fixnum
+  "GC threshold used while loading the rest of Emacs.")
 
-;; Raise threshold during startup for faster load
-(setq gc-cons-threshold gc-threshold-high
+(defconst my/gc-percentage-original gc-cons-percentage
+  "The original gc‑cons‑percentage value.")
+
+;; 1. Raise GC during start‑up
+(setq gc-cons-threshold  my/gc-threshold-high
       gc-cons-percentage 0.6)
 
-;; Functions to adjust GC
-(defun gc-set-high ()
-  "Set GC threshold to high for heavy operations."
-  (setq gc-cons-threshold gc-threshold-high
+(defun my/gc-set-high ()
+  "Raise the GC threshold for heavy operations."
+  (setq gc-cons-threshold  my/gc-threshold-high
         gc-cons-percentage 0.6))
 
-(defun gc-set-normal ()
-  "Restore GC threshold to normal."
-  (setq gc-cons-threshold gc-threshold-normal
-        gc-cons-percentage gc-percentage-original))
+(defun my/gc-set-normal ()
+  "Restore the GC threshold to its normal value."
+  (setq gc-cons-threshold  my/gc-threshold-normal
+        gc-cons-percentage my/gc-percentage-original))
 
-;; Restore normal GC after startup
-(add-hook 'emacs-startup-hook #'gc-set-normal)
+;; 2. Disable file-name handlers and VC for the start‑up period
+(defvar my/file-name-handler-alist-original file-name-handler-alist)
+(defvar my/vc-handled-backends-original      vc-handled-backends)
 
-;; Temporarily raise GC when using minibuffer
-(add-hook 'minibuffer-setup-hook #'gc-set-high)
+(setq file-name-handler-alist nil
+      vc-handled-backends nil)
+
+;; 3. Restore everything once the system has started
+(add-hook 'emacs-startup-hook #'my/gc-set-normal)
+
+;; 4. Keep GC light during minibuffer use
+(add-hook 'minibuffer-setup-hook #'my/gc-set-high)
 (add-hook 'minibuffer-exit-hook
-          (lambda () (run-at-time 1 nil #'gc-set-normal)))
+          (lambda () (run-at-time 1 nil #'my/gc-set-normal)))
 
-;; Lower GC when idle to free memory
+;; 5. Occasionally run GC when Emacs is idle
 (run-with-idle-timer 5 t
                      (lambda ()
                        (garbage-collect)
-                       (gc-set-normal)))
+                       (my/gc-set-normal)))
 
 (message "Smart GC active")
 
-;; Funciones de utilidad
+(push '(menu-bar-lines . 0) default-frame-alist)
+(push '(tool-bar-lines . 0) default-frame-alist)
+(push '(vertical-scroll-bars) default-frame-alist)
+(setq inhibit-startup-message t
+	  initial-scratch-message ""
+	  use-dialog-box nil)
+
 (defun my-safe-require (feature)
   "Try to FEATURE and ignore errors if not found."
   (condition-case nil
