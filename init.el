@@ -111,7 +111,7 @@
   :ensure nil
   :commands (dired dired-jump)
   :custom
-  (dired-listing-switches "-alh --group-directories-first")
+  (dired-listing-switches "-alh" "-v" "--group-directories-first")
   (dired-auto-revert-buffer t)
   (dired-dwim-target t)
   (dired-recursive-deletes 'always)
@@ -122,11 +122,10 @@
      (".*" "open" "xdg-open")))
   (dired-kill-when-opening-new-dired-buffer t)
   :config
-  ;; Define evil-mode keys for a vim-like experience.
   (evil-define-key 'normal dired-mode-map
     ;; Navigation
     (kbd "h") 'dired-up-directory
-    (kbd "l") 'dired-find-file-other-window ; Open in other window is often more useful
+    (kbd "l") 'dired-find-file-other-window
     (kbd "j") 'dired-next-line
     (kbd "k") 'dired-previous-line
     (kbd "G") 'dired-goto-file
@@ -146,7 +145,7 @@
     (kbd "R") 'dired-do-rename
     (kbd "D") 'dired-do-delete
     (kbd "C") 'dired-do-copy
-    (kbd "X") 'dired-open-file ; Use dired-open to open externally
+    (kbd "X") 'dired-open-file
     (kbd "M") 'dired-do-chmod
     (kbd "O") 'dired-do-chown))
 
@@ -154,11 +153,32 @@
 (use-package dired-x
   :ensure nil
   :after dired
-  :custom (dired-x-hands-off-my-keys nil)
+  :hook (dired-mode . dired-omit-mode)
   :config
-  ;; Define dired-omit-files to prevent void-variable errors
-  (setq dired-omit-files "^\\.[^.]\\|^#\\|^\\.$\\|^\\.\\.$\\|\\.pyc$\\|\\.o$")
-  (setq dired-omit-verbose nil))
+  (setq dired-omit-verbose nil
+		dired-omit-files
+		(concat dired-omit-files
+				"\\|^\\.DS_Store\\'"
+				"\\|^flycheck_.*"
+				"\\|^\\.project\\(?:ile\\)?\\'"
+				"\\|^\\.\\(?:svn\\|git\\)\\'"
+				"\\|^\\.ccls-cache\\'"
+				"\\|\\(?:\\.js\\)?\\.meta\\'"
+				"\\|\\.\\(?:elc\\|o\\|pyo\\|swp\\|class\\)\\'"))
+  (setq dired-clean-confirm-killing-deleted-buffers nil)
+  (when-let (cmd (cond ((featurep :system 'macos) "open")
+					   ((featurep :system 'linux) "xdg-open")
+					   ((featurep :system 'windows) "start")))
+	(setq dired-guess-shell-alist-user
+		  `(("\\.\\(?:docx\\|pdf\\|djvu\\|eps\\)\\'" ,cmd)
+			("\\.\\(?:jpe?g\\|png\\|gif\\|xpm\\)\\'" ,cmd)
+			("\\.\\(?:xcf\\)\\'" ,cmd)
+			("\\.csv\\'" ,cmd)
+			("\\.tex\\'" ,cmd)
+			("\\.\\(?:mp4\\|mkv\\|avi\\|flv\\|rm\\|rmvb\\|ogv\\)\\(?:\\.part\\)?\\'" ,cmd)
+			("\\.\\(?:mp3\\|flac\\)\\'" ,cmd)
+			("\\.html?\\'" ,cmd)
+			("\\.md\\'" ,cmd)))))
 
 (use-package diredfl
   :ensure t :straight t
@@ -326,11 +346,13 @@
 
 (use-package yasnippet
   :ensure t :straight t :defer t
-  :bind ("<f8>" . yas-insert-snippet)
+  :bind ("<f8> . yas-insert-snippet")
   :config
-  (add-to-list 'yas-snippet-dirs
-               (expand-file-name "var/snippets/" user-emacs-directory))
-  (yas-global-mode 1))
+  (make-directory (expand-file-name "var/snippets" user-emacs-directory) t)
+  (setq yas-snippet-dirs
+        (list (expand-file-name "var/snippets" user-emacs-directory)))
+  (yas-global-mode 1)
+  (yas-reload-all))
 
 (use-package consult
   :ensure t :straight t :defer t

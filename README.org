@@ -8,14 +8,19 @@
 * Description
 This repository contains my personal Emacs configuration, optimized for software development, writing, and productivity. It includes:
 
-- Package management with straight.el and use-package
-- Modern interface with doom-modeline and doom-themes
-- Multi-language support with treesit-auto and eglot
-- Git integration via magit
-- Productivity enhancements with evil-mode (Vim emulation)
+- Package management with ~straight.el~ and ~use-package~
+- Modern interface with ~doom-modeline~ and ~doom-themes~
+- Multi-language support with ~treesit-auto~ and ~eglot~
+- Git integration via ~magit~
+- Productivity enhancements with ~evil-mode~ (Vim emulation) and custom keybindings
 
 * Installation
 ** Requirements
 - Emacs 29.1 or higher
 - Git
 - JetBrainsMono NF font installed (or other Nerd Font)
+
+Clone the repository:
+   #+BEGIN_SRC sh
+   git clone https://github.com/roidm/emacs.git ~/.config/emacs
+   #+END_SRC
