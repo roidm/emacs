@@ -5,8 +5,6 @@
 (setq copyright-names-regexp
       (format "%s <%s>" user-full-name user-mail-address))
 
-(add-to-list 'load-path (expand-file-name "lisp/" user-emacs-directory))
-
 ;; Bootstraps `straight.el'
 (setq straight-check-for-modifications nil)
 (defvar bootstrap-version)
