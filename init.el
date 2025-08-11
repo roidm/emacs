@@ -60,6 +60,7 @@
     "Function for `switch-to-prev-buffer-skip'."
     (string-match "\\*[^*]+\\*" (buffer-name buffer)))
   (setq switch-to-prev-buffer-skip 'skip-these-buffers)
+  (setq vc-handled-backends '(Git))
   :init
   (global-hl-line-mode 1)
   (global-auto-revert-mode 1)
@@ -70,22 +71,9 @@
   (save-place-mode 1)
   (winner-mode 1)
   (file-name-shadow-mode 1)
-  (defvar my-font-size-step 10)
-  (defun my-increase-font-size ()
-    (interactive)
-    (set-face-attribute 'default nil :height (+ (face-attribute 'default :height) my-font-size-step))
-    (message "Font size: %d" (face-attribute 'default :height)))
-  (defun my-decrease-font-size ()
-    (interactive)
-    (let ((new-size (- (face-attribute 'default :height) my-font-size-step)))
-      (when (>= new-size 50)
-        (set-face-attribute 'default nil :height new-size)))
-    (message "Font size: %d" (face-attribute 'default :height)))
-  (global-set-key (kbd "C-+") #'my-increase-font-size)
-  (global-set-key (kbd "C--") #'my-decrease-font-size)
+  (global-set-key (kbd "C-+") #'global-text-scale-adjust)
   (add-hook 'before-save-hook #'delete-trailing-whitespace)
   (modify-coding-system-alist 'file "" 'utf-8))
-
 (use-package window
   :ensure nil
   :custom
@@ -210,7 +198,7 @@
   (global-eldoc-mode))
 
 ;;; Org mode
-(use-package org :ensure nil :defer t)
+(straight-use-package '(org :type built-in) :defer t)
 
 (use-package org-modern
   :ensure t :straight t :defer t
@@ -753,6 +741,10 @@
 
 ;;; Nerd Icons
 (use-package nerd-icons :ensure t :straight t :defer t)
+
+(use-package all-the-icons
+  :straight t :defer
+  :if (display-graphic-p))
 
 (use-package nerd-icons-dired
   :ensure t :straight t :defer t
