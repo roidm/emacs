@@ -74,6 +74,7 @@
   (global-set-key (kbd "C-+") #'global-text-scale-adjust)
   (add-hook 'before-save-hook #'delete-trailing-whitespace)
   (modify-coding-system-alist 'file "" 'utf-8))
+
 (use-package window
   :ensure nil
   :custom
@@ -278,7 +279,7 @@
         which-key-sort-uppercase-first nil
         which-key-add-column-padding 3
         which-key-max-display-columns nil
-        which-key-min-display-lines 8
+        which-key-min-display-lines 6
         which-key-allow-imprecise-window-fit nil
         which-key-side-window-slot -10)
   :config
@@ -452,6 +453,13 @@
   :config
   (global-evil-matchit-mode 1))
 
+(use-package anzu
+  :ensure t :straight t :defer t
+  :after isearch
+  :init
+  (global-anzu-mode +1)
+  (setq anzu-mode-line-format ' " %d/%D  "))
+
 (use-package undo-tree
   :ensure t :straight t :defer t
   :hook
@@ -482,13 +490,13 @@
     :global-prefix "C-SPC")
 
   (my-leader-key
-	"RET" '(bookmark-jump :wk "Bookmarks")
+	"RET" '(bookmark-jump :wk "Jump to bookmarks")
 	"SPC" '(execute-extended-command :wk "M-x")
 	"/" '(evil-search-forward :wk "Search")
-	"." '(find-file :wk "find")
+	"." '(find-file :wk "Find file")
 	";" '(eval-expression :wk "Eval expresion")
 	"<" '(consult-buffer :wk "Switch buffer")
-	"'" '(evil-switch-to-windows-last-buffer :wk "Last buffer")
+	"'" '(evil-switch-to-windows-last-buffer :wk "Switch to last buffer")
 	"TAB TAB" '(comment-line :wk "Comment lines")
 
     ;; AI
