@@ -505,14 +505,16 @@
     "as" '(chatgpt-shell :wk "Open shell")
     "ar" '(chatgpt-shell-send-to-buffer :wk "send buffer")
     "at" '(chatgpt-shell-send-region :wk "send region")
-	;; ──────────────────────── HELP ─────────────────────────────
+
+	;; HELP
 	"h"  '(:ignore t :wk "Help")
 	"hh" '(help-command :wk "Help (menu)")
 	"hs" '(describe-major-mode :wk "Describe major mode")
 	"hk" '(help-with-timer :wk "Help timer")
 	"hi" '(display-missing-keybindings :wk "Babel…")
 	"hr" '(reload-init-file :wk "Reload configuration")
-	;; ──────────────────────── BUFFER ────────────────────────────
+
+	;; BUFFER
 	"b"  '(:ignore t :wk "Buffers")
 	"bb" '(switch-to-buffer :wk "Switch")
 	"bn" '(evil-next-buffer :wk "Next")
@@ -521,7 +523,8 @@
 	"bK" '(kill-some-buffers :wk "Kill buffers")
 	"bc" '(comment-line :wk "Toggle comment")
 	"bl" '(consult-buffer :wk "List buffers")
-	;; ──────────────────────── FILE ──────────────────────────────
+
+	;; FILE
 	"f"  '(:ignore t :wk "Files")
 	"ff" '(consult-find          :wk "Find file")
 	"fg" '(consult-git           :wk "Git project")
@@ -530,7 +533,8 @@
 	"fe" '(find-file-other-window :wk "Other window")
 	"fm" '(magit-mode :wk "Magit status")
 	"fp" '(bookmark-jump :wk "Bookmarks")
-	;; ──────────────────────── GIT / MAGIT ─────────────────────
+
+	;; GIT / MAGIT
 	"g" '(:ignore t :wk "Magit")
 	"gs" '(magit-status :wk "status")
 	"gc" '(magit-commit :wk "commit")
@@ -544,12 +548,14 @@
 	"gf" '(magit-fetch :wk "fetch")
 	"gm" '(magit-merge :wk "merge")
 	"gr" '(magit-rebase :wk "rebase")
-	;; ──────────────────────── SEARCH ─────────────────────────────
+
+	;; SEARCH
 	"s"  '(:ignore t :wk "Search")
 	"ss" '(consult-line          :wk "Search in buffer")
 	"sg" '(consult-ripgrep       :wk "Search project")
 	"sh" '(consult-grep           :wk "Grepped – advanced")
-	;; ──────────────────────── LSP ───────────────────────────────
+
+	;; Eglot
 	"l"  '(:ignore t :wk "Eglot")
 	"ld" '(eglot-find-definition   :wk "Go to def.")
 	"lr" '(eglot-rename             :wk "Rename")
@@ -557,7 +563,8 @@
 	"lc" '(eglot-format-buffer      :wk "Format")
 	"ll" '(eglot-diagnostics-mode   :wk "Toggle diag.")
 	"lt" '(eglot-shutdown          :wk "Shutdown")
-	;; ──────────────────────── ORG MODE ─────────────────────────
+
+	;; ORG MODE
 	"o"  '(:ignore t :wk "Org")
 	"oa" '(org-agenda :wk "Agenda")
 	"ot" '(org-tags-view :wk "Tags view")
@@ -569,7 +576,8 @@
 	"ol" '(org-toggle-link-display :wk "toggle literal links")
 	"oh" '(org-habit :wk "Habit")
 	"og" '(org-gmail-threads :wk "Gmail threads")
-	;; ──────────────────────── EDIT / CODING ─────────────────────
+
+	;; EDIT / CODING
 	"e"  '(:ignore t :wk "Edit/Code")
 	"ec" '(compile :wk "Compile T")
 	"er" '(eval-region :wk "Eval region")
@@ -578,7 +586,8 @@
 	"ex" '(remove-text-properties :wk "Clean buffer")
 	"el" '(enable-lisp-mode :wk "Lisp")
 	"eL" '(escape-newline :wk "No wrap")
-	;; ──────────────────────── MISC ──────────────────────────────
+
+	;; MISC
 	"w"  '(:ignore t :wk "Workspace/Window")
 	"wd" '(workspace-previous :wk "Previous")
 	"wf" '(workspace-switch-to :wk "Switch")
@@ -590,7 +599,7 @@
     "<up>" '(evil-window-up :wk "W up")
     "<right>" '(evil-window-right :wk "W right")
 
-
+    ;; Theme
 	"t"  '(:ignore t :wk "Theme/UI")
 	"tc" '(consult-theme :wk "Check themes")
 	"ta" '(doom-solarized-dark :wk "Solarized dark")
@@ -598,6 +607,7 @@
 	"tm" '(doom-moonlight-dark :wk "Moonlight dark")
 	"th" '(doom-themes-toggle :wk "Toggle theme")
 
+	;; Info / Settings
 	"i"  '(:ignore t :wk "Info/Settings")
 	"if" '(customize-group :wk "Custom")
 	"ii" '(describe-key :wk "Describe key")
@@ -605,6 +615,7 @@
 	"is" '(describe-variable :wk "Describe variable")
 	"ig" '(god-mode-toggle :wk "God mode")
 
+	;; Exit Emacs
 	"q"  '(:ignore t :wk "quit")
 	"qq" '(save-buffers-kill-terminal :wk "quit")
 	"qr" '(restart-emacs)))
@@ -643,7 +654,7 @@
   (add-to-list 'pulsar-pulse-functions 'diff-hl-next-hunk)
   (add-to-list 'pulsar-pulse-functions 'diff-hl-previous-hunk))
 
-;;: dashboard , themes and modeline
+;;: dashboard
 (use-package dashboard
   :defer t :straight t :ensure t
   :bind
@@ -708,6 +719,7 @@
 (when (display-graphic-p)
   (set-face-attribute 'default nil :height my--default-font-size))
 
+;; Theme and modeline
 (use-package doom-modeline
   :ensure t :straight t :defer t
   :custom
@@ -779,6 +791,7 @@
   (pinentry-start))
 ;;(setq auth-source-debug t)
 
+;; Pdf-tools
 (use-package pdf-tools
   :ensure t :straight t :defer t
   :commands (pdf-loader-install)
@@ -862,6 +875,7 @@
 
 (global-set-key (kbd "C-c g") #'chatgpt-shell)
 
+;; Vterm
 (use-package vterm
   :ensure t :straight t :defer t
   :bind ("M-<f7>" . vterm-toggle)
