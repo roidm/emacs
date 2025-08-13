@@ -350,6 +350,11 @@
   :mode ("README\\.md\\'" . gfm-mode)
   :init (setq markdown-command "multimarkdown"))
 
+(use-package hyprlang-ts-mode
+  :straight t :ensure t :defer t
+  :custom
+  (hyprlang-ts-mode-indent-offset 4))
+
 ;;; Corfu
 (use-package corfu
   :ensure t :straight t :defer t
@@ -661,28 +666,27 @@
   ("<f5>" . dashboard-open)
   :init
   (defun my-dashboard-initial-buffer ()
-	"Devuelve el buffer del dashboard, creándolo si es necesario."
 	(require 'dashboard)
 	(dashboard-insert-startupify-lists)
 	(get-buffer-create "*dashboard*"))
   (setq initial-buffer-choice #'my-dashboard-initial-buffer)
   :config
-  ;;(setq dashboard-startup-banner '1)
-  (setq dashboard-set-heading-icons t
-        dashboard-set-file-icons t
-        dashboard-items '((recents  . 5)
-                          (bookmarks . 5)
-                          (projects . 5)
-                          (agenda . 5))
-        dashboard-center-content t
-        dashboard-show-shortcuts nil))
+  (setq dashboard-display-icons-p t
+		dashboard-icon-type 'nerd-icons
+		dashboard-set-heading-icons t
+		dashboard-set-file-icons t
+		dashboard-items '((recents  . 5)
+						  (bookmarks . 5)
+						  (projects . 5)
+						  (agenda . 5))
+		dashboard-center-content t))
 (add-hook 'emacs-startup-hook
-          (lambda ()
-            (when (get-buffer "*scratch*")
-              (with-current-buffer "*scratch*"
-                (read-only-mode -1)
-                (lisp-interaction-mode)
-                (setq buffer-undo-list nil)))))
+		  (lambda ()
+			(when (get-buffer "*scratch*")
+			  (with-current-buffer "*scratch*"
+				(read-only-mode -1)
+				(lisp-interaction-mode)
+				(setq buffer-undo-list nil)))))
 
 (defun my-kill-mode-line-in-dashboard ()
   (when (string= (buffer-name) "*dashboard*")
@@ -899,6 +903,7 @@
                  (display-buffer-reuse-window display-buffer-at-bottom)
                  (reusable-frames . visible)
                  (window-height . 0.4))))
+
 
 ;;; Helper to install fonts, treesitter parsers...
 (defun my-first-install ()
