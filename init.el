@@ -707,14 +707,12 @@
 
 (my-apply-font-to-frame (selected-frame))
 (add-hook 'after-make-frame-functions #'my-apply-font-to-frame)
-(defvar my--default-font-size 125
-  "Default font height in units of 1/10 pt.")
-
+(defvar my--default-font-size 126)
 (defun my-apply-font-to-frame (frame)
   (with-selected-frame frame
     (set-face-attribute 'default nil
                         :family "JetBrainsMono NF"
-                        :height 126               ; 12.5 pt (≈ 12 px con DPI = 96)
+                        :height 126               ; 12.6 pt (≈ 12 px con DPI = 96)
                         :weight 'SemiBold)
 	(set-face-attribute 'variable-pitch nil
 					:family "UbuntuSans Nerd Font Propo"
@@ -731,7 +729,8 @@
   (doom-modeline-buffer-name t)
   (doom-modeline-vcs-max-length 25)
   :config
-  (setq display-time-format "%a %e %b, %H:%M")
+  (setq display-time-format "%a %e %b, %H:%M"
+		display-time-default-load-average nil)
   (display-time-mode 1)
   (setq doom-modeline-icon t)
   :hook
