@@ -61,6 +61,11 @@
 
 (setq package-enable-at-startup nil) ;; Disables the default package manager.
 
+(setq byte-compile-warnings '(not obsolete))
+(setq inhibit-automatic-native-compilation t)
+(setq warning-suppress-log-types '((comp) (bytecomp)))
+(setq native-comp-async-report-warnings-errors 'silent)
+
 (defun my-setup-history-files ()
   (let ((history-dir "~/.config/emacs/var/history/"))
     (unless (file-directory-p history-dir)

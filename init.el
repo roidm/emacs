@@ -662,14 +662,17 @@
 ;;: dashboard
 (use-package dashboard
   :defer t :straight t :ensure t
-  :bind
-  ("<f5>" . dashboard-open)
   :init
+  (setq initial-scratch-message
+		(concat initial-scratch-message
+				";; Press <f5> to open the dashboard\n\n"))
   (defun my-dashboard-initial-buffer ()
 	(require 'dashboard)
 	(dashboard-insert-startupify-lists)
 	(get-buffer-create "*dashboard*"))
   (setq initial-buffer-choice #'my-dashboard-initial-buffer)
+  :bind
+  ("<f5>" . dashboard-open)
   :config
   (setq dashboard-display-icons-p t
 		dashboard-icon-type 'nerd-icons
@@ -701,9 +704,9 @@
                         :height 126               ; 12.5 pt (≈ 12 px con DPI = 96)
                         :weight 'SemiBold)
 	(set-face-attribute 'variable-pitch nil
-					:family "UbuntuSans Nerd Font Propo"
-					:height 130
-					:weight 'medium)))
+						:family "UbuntuSans Nerd Font Propo"
+						:height 130
+						:weight 'medium)))
 
 (my-apply-font-to-frame (selected-frame))
 (add-hook 'after-make-frame-functions #'my-apply-font-to-frame)
