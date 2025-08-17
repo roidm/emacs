@@ -515,14 +515,6 @@
     "ar" '(chatgpt-shell-send-to-buffer :wk "send buffer")
     "at" '(chatgpt-shell-send-region :wk "send region")
 
-	;; HELP
-	"h"  '(:ignore t :wk "Help")
-	"hh" '(help-command :wk "Help (menu)")
-	"hs" '(describe-major-mode :wk "Describe major mode")
-	"hk" '(help-with-timer :wk "Help timer")
-	"hi" '(display-missing-keybindings :wk "Babel…")
-	"hr" '(reload-init-file :wk "Reload configuration")
-
 	;; BUFFER
 	"b"  '(:ignore t :wk "Buffers")
 	"bb" '(switch-to-buffer :wk "Switch")
@@ -535,9 +527,9 @@
 
 	;; FILE
 	"f"  '(:ignore t :wk "Files")
-	"ff" '(consult-find          :wk "Find file")
-	"fg" '(consult-git           :wk "Git project")
-	"fr" '(consult-recent-file   :wk "Recents")
+	"ff" '(consult-find :wk "Find file")
+	"fg" '(consult-git :wk "Git project")
+	"fr" '(consult-recent-file :wk "Recents")
 	"fa" '(org-agenda :wk "Org agenda")
 	"fe" '(find-file-other-window :wk "Other window")
 	"fm" '(magit-mode :wk "Magit status")
@@ -560,18 +552,18 @@
 
 	;; SEARCH
 	"s"  '(:ignore t :wk "Search")
-	"ss" '(consult-line          :wk "Search in buffer")
-	"sg" '(consult-ripgrep       :wk "Search project")
-	"sh" '(consult-grep           :wk "Grepped – advanced")
+	"ss" '(consult-line :wk "Search in buffer")
+	"sg" '(consult-ripgrep :wk "Search project")
+	"sh" '(consult-grep :wk "Grepped – advanced")
 
 	;; Eglot
 	"l"  '(:ignore t :wk "Eglot")
-	"ld" '(eglot-find-definition   :wk "Go to def.")
-	"lr" '(eglot-rename             :wk "Rename")
-	"li" '(eglot-code-actions       :wk "Code actions")
-	"lc" '(eglot-format-buffer      :wk "Format")
-	"ll" '(eglot-diagnostics-mode   :wk "Toggle diag.")
-	"lt" '(eglot-shutdown          :wk "Shutdown")
+	"ld" '(eglot-find-definition :wk "Go to def.")
+	"lr" '(eglot-rename :wk "Rename")
+	"li" '(eglot-code-actions :wk "Code actions")
+	"lc" '(eglot-format-buffer :wk "Format")
+	"ll" '(eglot-diagnostics-mode :wk "Toggle diag.")
+	"lt" '(eglot-shutdown :wk "Shutdown")
 
 	;; ORG MODE
 	"o"  '(:ignore t :wk "Org")
