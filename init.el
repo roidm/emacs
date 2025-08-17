@@ -896,6 +896,9 @@ If no, restores full opacity. Only affects the active frame."
 
 (global-set-key (kbd "C-c g") #'chatgpt-shell)
 
+(use-package sudo-edit
+  :straight t :ensure t :defer t)
+
 ;; Vterm
 (use-package vterm
   :ensure t :straight t :defer t
