@@ -5,28 +5,6 @@
 (setq copyright-names-regexp
       (format "%s <%s>" user-full-name user-mail-address))
 
-;; Bootstraps `straight.el'
-(setq straight-check-for-modifications nil)
-(defvar bootstrap-version)
-(let ((bootstrap-file
-       (expand-file-name
-        "straight/repos/straight.el/bootstrap.el"
-        (or (bound-and-true-p straight-base-dir)
-            user-emacs-directory)))
-      (bootstrap-version 7))
-  (unless (file-exists-p bootstrap-file)
-    (with-current-buffer
-        (url-retrieve-synchronously
-         "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
-         'silent 'inhibit-cookies)
-      (goto-char (point-max))
-      (eval-print-last-sexp)))
-  (load bootstrap-file nil 'nomessage))
-(straight-use-package '(project :type built-in))
-(straight-use-package 'use-package)
-(require 'package)
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-
 ;;; Emacs
 (use-package emacs
   :ensure nil
@@ -658,6 +636,7 @@
 ;;: dashboard
 (use-package dashboard
   :defer t :straight t :ensure t
+  :after nerd-icons
   :init
   (setq initial-scratch-message
 		(concat initial-scratch-message
